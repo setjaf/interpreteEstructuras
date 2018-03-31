@@ -25,6 +25,7 @@ void inserta(char **nombres,int cuantos, char *numero, int calif, int calif1, Li
 
 void borra(int cantidad, char **nombres,ListaLL *lista, ListaLP *pila, ListaLC *cola);
 
+void muestra(char **nombres,ListaLL *lista, ListaLP *pila, ListaLC *cola);
 /************************** Termina**************************************************************/
 
 int main(int argc, char const *argv[])
@@ -103,11 +104,18 @@ int main(int argc, char const *argv[])
 			break;
 
 			case 2:
-				inserta(nombres,tarea[2],numero,0,0,lista,pila,cola);
+				if(tarea[1]>0)
+					inserta(nombres,tarea[2],numero,0,0,lista,pila,cola);
+				else
+					printf("\n Ingresa un nombre que sea valido\n");
 			break;
 
 			case 3:
 				borra(tarea[1],nombres,lista,pila,cola);
+			break;
+
+			case 4:
+				muestra(nombres,lista,pila,cola);
 			break;
 
 			case 9:
@@ -164,32 +172,37 @@ void crear(int cantidad, char **nombres,ListaLL *lista, ListaLP *pila, ListaLC *
 /**************************************************************************************************************/
 void inserta(char **nombres,int cuantos, char *numero, int calif, int calif1,ListaLL *Llista, ListaLP *Lpila, ListaLC *Lcola){
 
-
 	switch(nombres[0][0]){
 		case 'p':
 			if (cuantos==1 || cuantos==0 )
 			{
+				
 				Lpila->aux=Lpila->inicio;
-				//Se busca en la lista de pilas la pila con el nombre indicado
+				//Se busca en la Lpila de pilas la pila con el nombre indicado
 
 				if(numero[0]=='\0'){
 					printf("\nIndica el numero que deseas Insertar\n");
 					Lpila->aux=NULL;
 				}
 
-				while(Lpila->aux!=NULL){
+				while(Lpila->aux!=NULL && strcmp(nombres[0],Lpila->aux->nombre)){
 
-					//Cuando se encuentra, se llama al metodo Insertar y se agrega el dato
-
-					if (!strcmp(nombres[0],Lpila->aux->nombre))
-					{
-						Lpila->aux->pila->Insertar(numero);
-						Lpila->aux->pila->Mostrar();
-					}
-
-					Lpila->aux=Lpila->aux->siguiente;
-
+					Lpila->aux=Lpila->aux->siguiente;	
+					
 				}
+
+				if (Lpila->aux!=NULL)
+				{
+					Lpila->aux->pila->Insertar(numero);
+					Lpila->aux->pila->Mostrar();
+				}else{
+					printf("\n No se encuentra el nombre que indicaste\n");
+				}
+
+
+
+			
+				
 
 			}
 		break;
@@ -199,21 +212,25 @@ void inserta(char **nombres,int cuantos, char *numero, int calif, int calif1,Lis
 			if (cuantos==1 || cuantos==0)
 			{
 				Lcola->aux=Lcola->inicio;
+				//Se busca en la Lcola de pilas la pila con el nombre indicado
+
 				if(numero[0]=='\0'){
 					printf("\nIndica el numero que deseas Insertar\n");
 					Lcola->aux=NULL;
 				}
 
-				while(Lcola->aux!=NULL){
+				while(Lcola->aux!=NULL && strcmp(nombres[0],Lcola->aux->nombre)){
 
-					if (!strcmp(nombres[0],Lcola->aux->nombre))
-					{
-						Lcola->aux->cola->Insertar(numero);
-						Lcola->aux->cola->Mostrar();
-					}
+					Lcola->aux=Lcola->aux->siguiente;	
+					
+				}
 
-					Lcola->aux=Lcola->aux->siguiente;
-
+				if (Lcola->aux!=NULL)
+				{
+					Lcola->aux->cola->Insertar(numero);
+					Lcola->aux->cola->Mostrar();
+				}else{
+					printf("\n No se encuentra el nombre que indicaste\n");
 				}
 
 			}
@@ -225,21 +242,25 @@ void inserta(char **nombres,int cuantos, char *numero, int calif, int calif1,Lis
 			if (cuantos==1 || cuantos==0)
 			{
 				Llista->aux=Llista->inicio;
+				//Se busca en la Llista de pilas la pila con el nombre indicado
+
 				if(numero[0]=='\0'){
 					printf("\nIndica el numero que deseas Insertar\n");
 					Llista->aux=NULL;
 				}
 
-				while(Llista->aux!=NULL){
+				while(Llista->aux!=NULL && strcmp(nombres[0],Llista->aux->nombre)){
 
-					if (!strcmp(nombres[0],Llista->aux->nombre))
-					{
-						Llista->aux->lista->Insertar(numero);
-						Llista->aux->lista->Mostrar();
-					}
+					Llista->aux=Llista->aux->siguiente;	
+					
+				}
 
-					Llista->aux=Llista->aux->siguiente;
-
+				if (Llista->aux!=NULL)
+				{
+					Llista->aux->lista->Insertar(numero);
+					Llista->aux->lista->Mostrar();
+				}else{
+					printf("\n No se encuentra el nombre que indicaste\n");
 				}
 
 			}
@@ -247,11 +268,9 @@ void inserta(char **nombres,int cuantos, char *numero, int calif, int calif1,Lis
 		break;
 	}
 		
-
 }
 /*************************************************************************************************************/
 void borra(int cantidad, char **nombres, ListaLL *lista, ListaLP *pila, ListaLC *cola){
-	printf("\nBorrando ando\n");
 
 	for (int j = 0; j < cantidad; ++j)
 	{
@@ -275,6 +294,65 @@ void borra(int cantidad, char **nombres, ListaLL *lista, ListaLP *pila, ListaLC 
 		
 
 	}
+}
+
+void muestra(char **nombres, ListaLL *lista, ListaLP *pila, ListaLC *cola){
+
+	switch(nombres[0][0]){
+		case 'p':
+			pila->aux=pila->inicio;
+			
+			while(pila->aux!=NULL && strcmp(nombres[0],pila->aux->nombre)){
+
+				pila->aux=pila->aux->siguiente;	
+
+				
+			}
+			if (pila->aux!=NULL)
+			{
+				pila->aux->pila->Mostrar();
+			}else{
+				printf("\n No se encuentra el nombre que indicaste\n");
+			}
+
+		break;
+
+		case 'c':
+			cola->aux=cola->inicio;
+			
+			while(cola->aux!=NULL && strcmp(nombres[0],cola->aux->nombre)){
+
+				cola->aux=cola->aux->siguiente;	
+
+				
+			}
+			if (cola->aux!=NULL)
+			{
+				cola->aux->cola->Mostrar();
+			}else{
+				printf("\n No se encuentra el nombre que indicaste\n");
+			}
+		break;
+
+		case 'l':
+			lista->aux=lista->inicio;
+			
+			while(lista->aux!=NULL && strcmp(nombres[0],lista->aux->nombre)){
+
+				lista->aux=lista->aux->siguiente;	
+
+				
+			}
+			if (lista->aux!=NULL)
+			{
+				lista->aux->lista->Mostrar();
+			}else{
+				printf("\n No se encuentra el nombre que indicaste\n");
+			}
+
+		break;
+	}
+
 }
 /*--------------------------------------------------------------------------------------------------------*/
 

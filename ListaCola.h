@@ -23,6 +23,7 @@ public:
 	int nodos;	
 	void Insertar(char *nombre);
 	void Borrar(char *nombre);
+	void Mostrar(char *nombre);
 	
 };
 
@@ -47,6 +48,8 @@ void ListaLC::Insertar(char *nombre){
 	}
 	
 }
+
+
 
 
 void ListaLC::Borrar(char *nombre){
