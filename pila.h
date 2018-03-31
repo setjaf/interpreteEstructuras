@@ -1,8 +1,8 @@
 class NodoP{
 	public:
-		int valor;
+		char dato[50];
 		NodoP *anterior;	
-		NodoP(int valor_ext);
+		NodoP(char *dato_ext);
 };
 
 
@@ -10,9 +10,9 @@ class Pila{
 	public:
 		NodoP *tope,*inicio,*aux;
 		Pila();
-		void insertar (int valor_ext);
-		void mostrar (void);
-		void extraer (void);	
+		void Insertar (char *dato_ext);
+		void Mostrar (void);
+		void Extraer (void);	
 };
 
 /*
@@ -21,8 +21,8 @@ class Pila{
 
 /***************** NodoP **********************/
 
-NodoP::NodoP(int valor_ext){
-	valor=valor_ext;
+NodoP::NodoP(char *dato_ext){
+	strcpy(dato,dato_ext);
 	anterior=NULL;
 }
 
@@ -42,20 +42,20 @@ Pila::Pila(){
 */
 
 /****************** Pila **********************/
-void Pila::insertar(int valor_ext){
+void Pila::Insertar(char *dato_ext){
 	
 	if(!this->tope){
-		this->tope = new NodoP(valor_ext);
+		this->tope = new NodoP(dato_ext);
 		this->inicio = tope;
 	}else{
 		this->aux=this->tope;
-		this->tope=new NodoP(valor_ext);
+		this->tope=new NodoP(dato_ext);
 		this->tope->anterior=this->aux;
 	}
 
 }
 
-void Pila::extraer(void){
+void Pila::Extraer(void){
 
 	if(this->inicio==NULL){
 
@@ -65,14 +65,14 @@ void Pila::extraer(void){
 
 		this->aux = this->tope->anterior;
 
-		printf("\nEl dato que acabas de sacar de la pila es: %d \n", this->tope->valor);
+		printf("\nEl dato que acabas de sacar de la pila es: %s \n", this->tope->dato);
 
 		delete(this->tope);
 		
 		this->tope = this->aux;
 	}else{
 
-		printf("\nEl dato que acabas de sacar de la pila es: %d \n", this->tope->valor);
+		printf("\nEl dato que acabas de sacar de la pila es: %s \n", this->tope->dato);
 
 		delete(this->tope);
 
@@ -84,13 +84,13 @@ void Pila::extraer(void){
 
 }
 
-void Pila::mostrar(void){
+void Pila::Mostrar(void){
 	if(this->inicio==NULL){
 
 		printf("Cola esta vacia\n");
 
 	}else{
-		printf("\nEl valor que esta en el tope de la lista es: %d\n", this->tope->valor);
+		printf("\nEl valor que esta en el tope de la lista es: %s\n", this->tope->dato);
 	}
 	
 }

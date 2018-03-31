@@ -1,8 +1,8 @@
 class NodoL
 {
 public:
-	NodoL(int dato);
-	int valor;
+	NodoL(char *dato_ext);
+	char dato[50];
 	NodoL *siguiente;
 };
 
@@ -12,14 +12,14 @@ public:
 	Lista(void);
 	NodoL *inicio, *aux, *aux2, *fin;
 	int nodos;
-	void Insertar(int dato, int lugar);
+	void Insertar(char *dato_ext, int lugar);
 	void Mostrar(void);
-	void Borrar(int lugar);
+	void Extraer(int lugar);
 	void Ordenar(void);
 };
 
-NodoL::NodoL(int dato){
-	valor=dato;
+NodoL::NodoL(char *dato_ext){
+	strcpy(dato,dato_ext);
 	siguiente=NULL;
 }
 
@@ -28,30 +28,30 @@ Lista::Lista(void){
 	nodos=0;
 }
 
-void Lista::Insertar(int dato, int lugar){
+void Lista::Insertar(char *dato_ext, int lugar=0){
 	if (this->nodos==0){
 
-		this->fin=this->inicio=new NodoL(dato);
+		this->fin=this->inicio=new NodoL(dato_ext);
 		this->nodos++;
 	}else{
 		//Lugar = 0 significa que se inserta en el final
 		if (lugar==0 || lugar>nodos)
 		{
 
-			this->aux=new NodoL(dato);
+			this->aux=new NodoL(dato_ext);
 			this->fin->siguiente=this->aux;
 			this->fin=this->aux;
 			this->nodos++;
 
 		}else if(lugar==1){
 
-			this->aux2=new NodoL(dato);
+			this->aux2=new NodoL(dato_ext);
 			this->aux2->siguiente=this->inicio;
 			this->inicio=this->aux2;
 			this->nodos++;
 		}else{
 
-			this->aux2=new NodoL(dato);
+			this->aux2=new NodoL(dato_ext);
 			this->aux=this->inicio;
 
 			for (int i = 1; i < lugar-1; ++i)
@@ -78,7 +78,7 @@ void Lista::Mostrar(void){
 		int i=0;
 		while(this->aux!=NULL){
 			i++;
-			printf("%d - Posicion:%d\n",this->aux->valor,i);
+			printf("%s - Posicion:%d\n",this->aux->dato,i);
 			this->aux=this->aux->siguiente;
 		}
 	}
@@ -86,7 +86,7 @@ void Lista::Mostrar(void){
 }
 
 
-void Lista::Borrar(int lugar=0){
+void Lista::Extraer(int lugar=0){
 	if (this->nodos<=0||this->inicio==NULL){
 
 		printf("\nLa lista esta vacia\n");

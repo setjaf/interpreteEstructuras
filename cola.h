@@ -1,8 +1,8 @@
 class NodoC
 {
 public:
-	NodoC(int dato);
-	int valor;
+	NodoC(char *dato_ext);
+	char dato[50];
 	NodoC *siguiente;
 };
 
@@ -12,14 +12,14 @@ public:
 	Cola(void);
 	NodoC *inicio, *aux, *aux2, *fin;
 	int nodos;
-	void Insertar(int dato);
+	void Insertar(char *dato_ext);
 	void Mostrar(void);
-	void Borrar(void);
+	void Extraer(void);
 };
 
 
-NodoC::NodoC(int dato){
-	valor=dato;
+NodoC::NodoC(char *dato_ext){
+	strcpy(dato,dato_ext);
 	siguiente=NULL;
 }
 
@@ -29,14 +29,14 @@ Cola::Cola(void){
 	nodos=0;
 }
 
-void Cola::Insertar(int dato){
+void Cola::Insertar(char *dato_ext){
 	if (this->nodos==0){
 
-		this->fin=this->inicio=new NodoC(dato);
+		this->fin=this->inicio=new NodoC(dato_ext);
 		this->nodos++;
 	}else{
 
-		this->aux=new NodoC(dato);
+		this->aux=new NodoC(dato_ext);
 		this->fin->siguiente=this->aux;
 		this->fin=this->aux;
 		this->nodos++;
@@ -55,7 +55,7 @@ void Cola::Mostrar(void){
 		int i=0;
 		while(this->aux!=NULL){
 			i++;
-			printf("%d - Posicion:%d\n",this->aux->valor,i);
+			printf("%s - Posicion:%d\n",this->aux->dato,i);
 			this->aux=this->aux->siguiente;
 		}
 	}
@@ -63,7 +63,7 @@ void Cola::Mostrar(void){
 }
 
 
-void Cola::Borrar(void){
+void Cola::Extraer(void){
 	if (this->nodos<=0||this->inicio==NULL){
 
 		printf("\nLa cola esta vacia\n");
@@ -72,13 +72,13 @@ void Cola::Borrar(void){
 		//Lugar = 0 significa que se inserta en el final
 		if (this->nodos==1)
 		{
-			printf("El número que sacaste es: %d",this->fin->valor);
+			printf("El número que sacaste es: %s",this->fin->dato);
 			delete this->fin;
 			this->nodos--;
 			this->inicio=this->fin=this->aux=this->aux2=NULL;
 		}
 		else{
-			printf("El número que sacaste es: %d",this->inicio->valor);
+			printf("El número que sacaste es: %s",this->inicio->dato);
             this->aux=this->inicio;
 			this->aux2=this->aux->siguiente;
 			delete(this->aux);			
