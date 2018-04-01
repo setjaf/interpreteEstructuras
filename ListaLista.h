@@ -53,34 +53,55 @@ void ListaLL::Insertar(char *nombre){
 void ListaLL::Borrar(char *nombre){
 	if (this->nodos<=0||this->inicio==NULL){
 
-		printf("\nLa lista esta vacia\n");
+		printf("\nNo se han creado Listas\n");
 
 	}else{
 		//Lugar = 0 significa que se inserta en el final
-		if (this->nodos==1)
+		if (this->nodos==1 && !strcmp(this->fin->nombre,nombre))
 		{
 			delete this->fin;
+			printf("\nSe ha borrado %s\n",nombre);
 			this->nodos--;
 			this->inicio=this->fin=this->aux=this->aux2=NULL;
 		}else{
-
 			this->aux=this->inicio;
 
-			while(this->aux!=NULL){
+			if (!strcmp(this->aux->nombre,nombre))
+			{
+				this->aux2=this->aux->siguiente;
+				this->inicio=this->aux2;
+				delete(this->aux);
+				printf("\nSe ha borrado %s\n",nombre);
+				this->nodos--;
 
-				if(strcmp(this->aux->siguiente->nombre,nombre)){
+			}else{
+
+				while(this->aux!=NULL && strcmp(this->aux->siguiente->nombre,nombre)){
+					
 					this->aux=this->aux->siguiente;
+
+				}
+				if(this->aux!=NULL){	
+
+					this->aux2=this->aux->siguiente;
+					
+					if (this->aux2==this->fin)
+					{
+						this->fin=this->aux;
+					}
+
+					this->aux->siguiente=this->aux2->siguiente;
+					delete(this->aux2);
+					printf("\nSe ha borrado %s\n",nombre);
+					this->nodos--;
+				}else{
+					printf("\n No se encontró el nombre indicado\n");
 				}
 
+
 			}
-			if(this->aux!=NULL){				
-				this->aux2=this->aux->siguiente;
-				this->aux->siguiente=this->aux2->siguiente;
-				delete(this->aux2);
-				this->nodos--;
-			}else{
-				printf("\n No se encontró el nombre indicado\n");
-			}		
+
+				
 		}
 
 	}

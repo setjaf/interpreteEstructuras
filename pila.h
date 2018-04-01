@@ -59,7 +59,7 @@ void Pila::Extraer(void){
 
 	if(this->inicio==NULL){
 
-		printf("Cola esta vacia\n");
+		printf("Pila esta vacia\n");
 
 	}else if(this->tope->anterior!=NULL){
 
@@ -87,7 +87,7 @@ void Pila::Extraer(void){
 void Pila::Mostrar(void){
 	if(this->inicio==NULL){
 
-		printf("Cola esta vacia\n");
+		printf("Pila esta vacia\n");
 
 	}else{
 		printf("\nEl valor que esta en el tope de la lista es: %s\n", this->tope->dato);

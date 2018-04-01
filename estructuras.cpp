@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 //Importación de archivos declaración de estructuras
 #include "cola.h"
@@ -12,10 +13,11 @@
 #include "ListaCola.h"
 #include "ListaLista.h"
 
-char acciones[9][10]={"crea","inserta","borra","muestra","extrae","vacia","anexa","limpia","salir"};
+
+char acciones[9][10]={"crea","inserta","borra","muestra","extrae","anexa","limpia","salir"};
 char objetos[3][10]={"pila","cola","lista"};
 char calificativos[5][15]={"impares","pares","menor","mayor","aleatorios"};
-int accionesN=9, objetosN=3,califN=5;
+int accionesN=8, objetosN=3,califN=5;
 /************************** Declaracion de funciones ********************************************/
 int isnumber(char *string);
 
@@ -30,7 +32,7 @@ void muestra(char **nombres,ListaLL *lista, ListaLP *pila, ListaLC *cola);
 
 int main(int argc, char const *argv[])
 {
-	int numNombres=0;
+	int numNombres=0,numCalif=0;
 	char **nombres=(char **)malloc(numNombres*sizeof(char **));
 	int tarea[6]={0,0,0,0,0,0};
 	char opc[200], *palabra, numero[50]={'\0'};
@@ -38,7 +40,13 @@ int main(int argc, char const *argv[])
 	ListaLP *pila = new ListaLP();
 	ListaLC *cola = new ListaLC();
 
+	srand(time(NULL));
+
 	do{
+		for (int i = 0; i < 6; ++i)
+		{
+			tarea[i]=0;
+		}
 		printf("\nIntroduce lo que deseas hacer:\n");
 		gets(opc);
 
@@ -78,6 +86,20 @@ int main(int argc, char const *argv[])
 
 			}
 
+			if (!strcmp(palabra,"pares"))
+			{
+				tarea[4]=1;
+			}else if (!strcmp(palabra,"impares"))
+			{
+				tarea[4]=2;
+			}
+
+			if (!strcmp(palabra,"aleatorios"))
+			{
+				tarea[5]=1;
+			}
+
+
 			if (!strcmp(palabra,"numero"))
 			{
 				tarea[2]=1;
@@ -105,7 +127,7 @@ int main(int argc, char const *argv[])
 
 			case 2:
 				if(tarea[1]>0)
-					inserta(nombres,tarea[2],numero,0,0,lista,pila,cola);
+					inserta(nombres,tarea[2],numero,tarea[4],tarea[5],lista,pila,cola);
 				else
 					printf("\n Ingresa un nombre que sea valido\n");
 			break;
@@ -118,18 +140,21 @@ int main(int argc, char const *argv[])
 				muestra(nombres,lista,pila,cola);
 			break;
 
-			case 9:
+			case 8:
 				printf("\nGracias por haber venido :)\n");
 			break;
+
+			default:
+				printf("\nIngresa una instruccion valida\n");
 
 		}
 
 		numNombres=0;
-
+		
 		nombres=(char **)realloc(nombres,numNombres*sizeof(char **));
 		memset(numero,'\0',sizeof(numero));
 
-	}while(tarea[0]!=9);
+	}while(tarea[0]!=8);
 
 
 	return 0;
@@ -170,7 +195,9 @@ void crear(int cantidad, char **nombres,ListaLL *lista, ListaLP *pila, ListaLC *
 	
 }
 /**************************************************************************************************************/
-void inserta(char **nombres,int cuantos, char *numero, int calif, int calif1,ListaLL *Llista, ListaLP *Lpila, ListaLC *Lcola){
+void inserta(char **nombres,int cuantos, char *numero, int calif, int calif1, ListaLL *Llista, ListaLP *Lpila, ListaLC *Lcola){
+
+	int numeroI=0;
 
 	switch(nombres[0][0]){
 		case 'p':
@@ -198,11 +225,83 @@ void inserta(char **nombres,int cuantos, char *numero, int calif, int calif1,Lis
 				}else{
 					printf("\n No se encuentra el nombre que indicaste\n");
 				}
-
-
-
-			
 				
+			}else if(cuantos==2){
+
+				Lpila->aux=Lpila->inicio;
+
+				if(numero[0]=='\0'){
+					printf("\nIndica la cantidad de numeros que deseas Insertar\n");
+					Lpila->aux=NULL;
+				}
+
+				while(Lpila->aux!=NULL && strcmp(nombres[0],Lpila->aux->nombre)){
+
+					Lpila->aux=Lpila->aux->siguiente;	
+					
+				}
+
+				if (Lpila->aux!=NULL)
+				{
+					int k=atoi(numero);
+
+					for (int i = 0; i < k; ++i)
+					{
+
+						if (calif1)//Entra en esta opcion si son aleatorios
+						{
+							if (calif==1)
+							{
+								do{
+									numeroI=rand();
+								}while(numeroI%2);
+							}else if(calif==2){
+
+								do{
+
+									numeroI=rand();
+
+								}while(!(numeroI%2));
+
+							}else{
+								numeroI=rand();
+							}
+							
+						}
+						else{//Entra si no son aleatorios
+
+							if (calif==1){
+
+								int j=0;
+								do{
+									numeroI=i+j;
+									j++;
+								}while(numeroI%2);
+
+							}else if(calif==2){
+								int j=0;
+								do{
+
+									numeroI=i+j;
+									j++;
+
+								}while(!(numeroI%2));
+
+							}else{
+
+								numeroI=i;
+
+							}
+
+						}
+						sprintf(numero,"%d",numeroI);
+						Lpila->aux->pila->Insertar(numero);
+						Lpila->aux->pila->Mostrar();
+					}
+				}else{
+					printf("\n No se encuentra el nombre que indicaste\n");
+				}
+
 
 			}
 		break;
@@ -232,6 +331,83 @@ void inserta(char **nombres,int cuantos, char *numero, int calif, int calif1,Lis
 				}else{
 					printf("\n No se encuentra el nombre que indicaste\n");
 				}
+
+			}else if(cuantos==2){
+
+				Lcola->aux=Lcola->inicio;
+
+				if(numero[0]=='\0'){
+					printf("\nIndica la cantidad de numeros que deseas Insertar\n");
+					Lcola->aux=NULL;
+				}
+
+				while(Lcola->aux!=NULL && strcmp(nombres[0],Lcola->aux->nombre)){
+
+					Lcola->aux=Lcola->aux->siguiente;	
+					
+				}
+
+				if (Lcola->aux!=NULL)
+				{
+					int k=atoi(numero);
+
+					for (int i = 0; i < k; ++i)
+					{
+
+						if (calif1)//Entra en esta opcion si son aleatorios
+						{
+							if (calif==1)
+							{
+								do{
+									numeroI=rand();
+								}while(numeroI%2);
+							}else if(calif==2){
+
+								do{
+									
+									numeroI=rand();
+
+								}while(!(numeroI%2));
+
+							}else{
+								numeroI=rand();
+							}
+							
+						}
+						else{//Entra si no son aleatorios
+
+							if (calif==1){
+
+								int j=0;
+								do{
+									numeroI=i+j;
+									j++;
+								}while(numeroI%2);
+
+							}else if(calif==2){
+								int j=0;
+								do{
+
+									numeroI=i+j;
+									j++;
+
+								}while(!(numeroI%2));
+
+							}else{
+
+								numeroI=i;
+
+							}
+
+						}
+						sprintf(numero,"%d",numeroI);
+						Lcola->aux->cola->Insertar(numero);
+						Lcola->aux->cola->Mostrar();
+					}
+				}else{
+					printf("\n No se encuentra el nombre que indicaste\n");
+				}
+
 
 			}
 
@@ -263,6 +439,83 @@ void inserta(char **nombres,int cuantos, char *numero, int calif, int calif1,Lis
 					printf("\n No se encuentra el nombre que indicaste\n");
 				}
 
+			}else if(cuantos==2){
+
+				Llista->aux=Llista->inicio;
+
+				if(numero[0]=='\0'){
+					printf("\nIndica la cantidad de numeros que deseas Insertar\n");
+					Llista->aux=NULL;
+				}
+
+				while(Llista->aux!=NULL && strcmp(nombres[0],Llista->aux->nombre)){
+
+					Llista->aux=Llista->aux->siguiente;	
+					
+				}
+
+				if (Llista->aux!=NULL)
+				{
+					int k=atoi(numero);
+
+					for (int i = 0; i < k; ++i)
+					{
+
+						if (calif1)//Entra en esta opcion si son aleatorios
+						{
+							if (calif==1)
+							{
+								do{
+									numeroI=rand();
+								}while(numeroI%2);
+							}else if(calif==2){
+
+								do{
+									
+									numeroI=rand();
+
+								}while(!(numeroI%2));
+
+							}else{
+								numeroI=rand();
+							}
+							
+						}
+						else{//Entra si no son aleatorios
+
+							if (calif==1){
+
+								int j=0;
+								do{
+									numeroI=i+j;
+									j++;
+								}while(numeroI%2);
+
+							}else if(calif==2){
+								int j=0;
+								do{
+
+									numeroI=i+j;
+									j++;
+
+								}while(!(numeroI%2));
+
+							}else{
+
+								numeroI=i;
+
+							}
+
+						}
+						sprintf(numero,"%d",numeroI);
+						Llista->aux->lista->Insertar(numero);						
+					}
+					Llista->aux->lista->Mostrar();
+				}else{
+					printf("\n No se encuentra el nombre que indicaste\n");
+				}
+
+
 			}
 
 		break;
@@ -273,9 +526,7 @@ void inserta(char **nombres,int cuantos, char *numero, int calif, int calif1,Lis
 void borra(int cantidad, char **nombres, ListaLL *lista, ListaLP *pila, ListaLC *cola){
 
 	for (int j = 0; j < cantidad; ++j)
-	{
-
-				
+	{				
 		
 			switch(nombres[j][0]){
 				case 'p':
@@ -294,16 +545,26 @@ void borra(int cantidad, char **nombres, ListaLL *lista, ListaLP *pila, ListaLC 
 		
 
 	}
+
+
 }
 
 void muestra(char **nombres, ListaLL *lista, ListaLP *pila, ListaLC *cola){
-
+	int i=0;
 	switch(nombres[0][0]){
 		case 'p':
+
+			if(!strcmp(nombres[0],"pilas")){
+				i=1;
+				printf("\nLas pilas disponibles existentes son:\n");
+			}
+
 			pila->aux=pila->inicio;
 			
 			while(pila->aux!=NULL && strcmp(nombres[0],pila->aux->nombre)){
-
+				if(i){
+					printf("\n* %s \n",pila->aux->nombre);
+				}
 				pila->aux=pila->aux->siguiente;	
 
 				
@@ -312,15 +573,27 @@ void muestra(char **nombres, ListaLL *lista, ListaLP *pila, ListaLC *cola){
 			{
 				pila->aux->pila->Mostrar();
 			}else{
-				printf("\n No se encuentra el nombre que indicaste\n");
+				if(!i){
+					printf("\n No se encuentra el nombre que indicaste\n");
+				}
 			}
 
 		break;
 
 		case 'c':
+
+			if(!strcmp(nombres[0],"colas")){
+				i=1;
+				printf("\nLas colas disponibles existentes son:\n");
+			}
+
 			cola->aux=cola->inicio;
 			
 			while(cola->aux!=NULL && strcmp(nombres[0],cola->aux->nombre)){
+
+				if(i){
+					printf("\n* %s \n",cola->aux->nombre);
+				}
 
 				cola->aux=cola->aux->siguiente;	
 
@@ -330,14 +603,26 @@ void muestra(char **nombres, ListaLL *lista, ListaLP *pila, ListaLC *cola){
 			{
 				cola->aux->cola->Mostrar();
 			}else{
-				printf("\n No se encuentra el nombre que indicaste\n");
+				if(!i){
+					printf("\n No se encuentra el nombre que indicaste\n");
+				}
 			}
 		break;
 
 		case 'l':
+
+			if(!strcmp(nombres[0],"listas")){
+				i=1;
+				printf("\nLas listas disponibles existentes son:\n");
+			}
+
 			lista->aux=lista->inicio;
 			
 			while(lista->aux!=NULL && strcmp(nombres[0],lista->aux->nombre)){
+
+				if(i){
+					printf("\n* %s \n",lista->aux->nombre);
+				}
 
 				lista->aux=lista->aux->siguiente;	
 
@@ -347,7 +632,10 @@ void muestra(char **nombres, ListaLL *lista, ListaLP *pila, ListaLC *cola){
 			{
 				lista->aux->lista->Mostrar();
 			}else{
-				printf("\n No se encuentra el nombre que indicaste\n");
+				if(!i){
+					printf("\n No se encuentra el nombre que indicaste\n");
+				}
+				
 			}
 
 		break;
